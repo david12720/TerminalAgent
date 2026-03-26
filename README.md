@@ -5,6 +5,7 @@ A lightweight CLI tool that translates natural language into shell commands and 
 ```
 $ python main.py "build this project"
 [>] build this project
+[~] terminal=powershell  model=qwen2.5-coder:7b
 [$] dotnet build MyApp.csproj
 
 Build succeeded.
@@ -40,11 +41,39 @@ python main.py "clean build artifacts"
 python main.py "list all cs files"
 ```
 
-The agent automatically:
-1. Scans the current directory for project files
-2. Detects the project type (Node.js, .NET, CMake, Rust, Go, Maven, etc.)
-3. Asks the local LLM to generate the right command
-4. Executes it and shows the output
+### CLI Flags
+
+| Flag | Short | Description |
+|---|---|---|
+| `--terminal` | `-t` | Shell to use: `powershell`, `bash`, `cmd` |
+| `--model` | `-m` | Ollama model name |
+| `--dry-run` | `-n` | Print command without executing |
+| `--host` | | Ollama server URL |
+
+```bash
+# Use Bash instead of PowerShell
+python main.py -t bash "build this project"
+
+# Use a different model
+python main.py -m mistral:7b "run the tests"
+
+# See the command without running it
+python main.py --dry-run "deploy to staging"
+```
+
+---
+
+## Configuration
+
+Create a `buildagent.toml` in your project directory (see `buildagent.example.toml`):
+
+```toml
+terminal = "powershell"
+model = "qwen2.5-coder:7b"
+ollama_host = "http://localhost:11434"
+```
+
+Priority: CLI flags > `buildagent.toml` > built-in defaults.
 
 ---
 
@@ -69,23 +98,9 @@ The agent automatically:
 
 | Terminal | Status |
 |---|---|
-| PowerShell (Windows) | ✅ Done |
-| Bash (Linux/macOS) | 🔜 Planned |
-| CMD (Windows) | 🔜 Planned |
-
----
-
-## Configuration
-
-Edit `main.py` to change defaults:
-
-```python
-Agent(
-    terminal=PowerShellTerminal(),
-    llm=OllamaProvider(model="qwen2.5-coder:7b", host="http://localhost:11434"),
-    scanner=DirectoryScanner(),
-)
-```
+| PowerShell (Windows) | Done |
+| Bash (Linux/macOS) | Done |
+| CMD (Windows) | Done |
 
 ---
 

@@ -1,0 +1,10 @@
+# BuildAgent configuration — copy to buildagent.toml to use
+
+# Shell to execute commands in: powershell | bash | cmd
+terminal = "powershell"
+
+# Ollama model name
+model = "qwen2.5-coder:7b"
+
+# Ollama server URL
+ollama_host = "http://localhost:11434"
